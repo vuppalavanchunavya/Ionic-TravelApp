@@ -1,0 +1,97 @@
+ <ion-header class="ion-no-border ion-padding-horizontal">
+  <ion-toolbar color="light">
+    <ion-title mode="md">Hi, Travellers!</ion-title>
+    <ion-buttons slot="end">
+      <ion-fab-button size="small" color="white" (click)="presentAlert()">
+        <ion-icon name="notifications-outline" color="primary"></ion-icon>
+      </ion-fab-button>
+    </ion-buttons>
+    <ion-buttons slot="start">
+      <ion-avatar>
+        <ion-img src="assets/imgs/girl.png"></ion-img>
+      </ion-avatar>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content color="light" class="ion-padding">
+  <ion-row>
+    <ion-col>
+      <ion-label class="big-heading">
+        <p class="ion-text-start">Where do</p>
+        <p class="ion-text-start marginTop">you want to go?</p>
+      </ion-label>
+    </ion-col>
+  </ion-row>
+
+  <ion-searchbar
+    class="ion-margin-bottom"
+    [(ngModel)]="searchTerm"
+    (ionInput)="filterContent()"
+    placeholder="Search for places..."
+    color="white"
+    debounce="800"
+  >
+    <ion-fab-button size="small" color="white">
+      <ion-icon name="search-outline" color="primary" animated></ion-icon>
+    </ion-fab-button>
+  </ion-searchbar>
+
+  <ion-row class="ion-margin-top">
+    <ion-label class="ion-margin-start heading">Categories</ion-label>
+    <ion-slides pager="true" class="category-slider">
+      <ion-slide *ngFor="let category of filteredCategories">
+        <ion-card>
+          <ion-item lines="none">
+            <ion-thumbnail slot="start">
+              <img [src]="category?.image" alt="" />
+            </ion-thumbnail>
+            <ion-label class="ion-text-wrap">{{category?.name}}</ion-label>
+          </ion-item>
+        </ion-card>
+      </ion-slide>
+    </ion-slides>
+  </ion-row>
+
+  <ion-row class="ion-margin-top">
+    <ion-col size="8">
+      <ion-label class="ion-margin-start heading">
+        Top trips
+        <ion-icon name="chevron-down-outline"></ion-icon>
+      </ion-label>
+    </ion-col>
+    <ion-col size="4">
+      <ion-button fill="clear" color="medium" size="small" (click)="navigateToExplore()">
+        EXPLORE
+        <ion-icon color="primary" name="chevron-forward-outline" slot="end"></ion-icon>
+      </ion-button>
+    </ion-col>
+    <ion-slides pager="true" class="trip-slider">
+      <ion-slide *ngFor="let trip of displayedTrips">
+        <ion-card class="location-card">
+          <div [routerLink]="['/', 'tabs', 'trip', trip.id]">
+            <img [src]="trip?.image" alt=""/>
+            <ion-chip class="ion-padding">
+              <ion-label color="white">₹ {{trip?.price}}</ion-label>
+            </ion-chip>
+          </div>
+          <ion-item lines="none">
+            <ion-label class="ion-text-wrap" [routerLink]="['/', 'tabs', 'trip', trip.id]">
+              <ion-text class="title">{{trip?.name}}</ion-text>
+              <p>
+                <ion-text color="medium">
+                  {{trip?.category}}
+                </ion-text>
+              </p>
+            </ion-label>
+            <ion-buttons slot="end">
+              <ion-fab-button size="small" [color]="isInWishlist(trip) ? 'danger' : 'white'" (click)="toggleWishlist(trip)">
+                <ion-icon [name]="isInWishlist(trip) ? 'heart' : 'heart-outline'"></ion-icon>
+              </ion-fab-button>
+            </ion-buttons>
+          </ion-item>
+        </ion-card>
+      </ion-slide>
+    </ion-slides>
+  </ion-row>
+</ion-content> 
